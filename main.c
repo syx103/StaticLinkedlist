@@ -23,13 +23,13 @@ int main() {
         i++;
     }
     list[h-1].next = 0;
-    list[MAX - 1].next = 1;
+    list[MAX - 1].next = 1;//为已用链表的头结点
     printf("长度为：%d\n",get_Length(list));
     print(list);
     printf("-------------------------------------\n");
-    delete(list,3);
+    delete(list,1);
     printf("长度为：%d\n",get_Length(list));
-    /*Insert(list,5,5);
+    /*Insert(list,1,5);
     printf("长度为：%d\n",get_Length(list));*/
     print(list);
     return 0;
@@ -53,7 +53,7 @@ int getLode(Node *list) {
 }
 //获得有效长度
 int get_Length(Node *list) {
-    int length = 0,i = 1;
+    int length = 0,i = list[MAX - 1].next;
     while(i != 0) {
         i = list[i].next;
         length++;
@@ -66,16 +66,27 @@ int Insert(Node *l,int i,typename x) {
     if(i < 1 || i > get_Length(l) + 1) {
         printf("插入错误！");
         return 0;
+    } else if (i == 1) {
+        l[MAX - 1].next = m;
+        l[m].next = 1;
+        l[m].context = x;
+    } else {
+        for (;j < i - 1;j++)  k = l[k].next;
+        l[m].context = x;
+        l[m].next = l[k].next;
+        l[k].next = m;
+        return 1;
     }
-    for (;j < i - 1;j++)  k = l[k].next;
-    l[m].context = x;
-    l[m].next = l[k].next;
-    l[k].next = m;
-    return 1;
 }
 //删除操作
 int delete(Node *l,int k) {
-    int j = 1,m = 1;
+    int j = 1,m = 1,f = 1;
+    if(k == 1) {
+        f = l[MAX - 1].next;
+        l[MAX - 1].next = l[f].next;
+        l[f].next = l[0].next;
+        l[0].next = f;
+    }
     for (;j < k - 1;j++) m = l[m].next;
     k = l[m].next;
     l[m].next = l[k].next;
@@ -85,7 +96,7 @@ int delete(Node *l,int k) {
 }
 //数据的展示
 void print(Node *list) {
-    int i = 1;
+    int i = list[MAX - 1].next;
     while(list[i].next) {
         printf("数据为：%d\n",list[i].context);
         i = list[i].next;
